@@ -23,7 +23,7 @@ class TopNewsCard extends StatelessWidget {
       },
       child: Container(
         width: 200,
-        margin: EdgeInsets.only(right: 10),
+        margin: EdgeInsets.only(bottom: 10),
         padding: EdgeInsets.all(5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
