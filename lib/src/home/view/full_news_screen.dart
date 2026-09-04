@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/utils/date_format.dart';
 import '../model/top_news.dart';
 
 class FullNewsScreen extends StatelessWidget {
@@ -81,7 +82,7 @@ class FullNewsScreen extends StatelessWidget {
 
                       if (article.publishedAt != null)
                         Text(
-                          _formatDate(article.publishedAt!),
+                          formatDate(article.publishedAt!),
                           style: TextStyle(
                             color: Colors.grey.shade600,
                             fontSize: 13,
@@ -140,17 +141,5 @@ class FullNewsScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _formatDate(String date) {
-    try {
-      final parsedDate = DateTime.parse(date);
-
-      return '${parsedDate.day.toString().padLeft(2, '0')}/'
-          '${parsedDate.month.toString().padLeft(2, '0')}/'
-          '${parsedDate.year}';
-    } catch (e) {
-      return date;
-    }
   }
 }
