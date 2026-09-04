@@ -84,7 +84,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     : GridView.builder(
                         itemCount:
                             topNewsController.topNews?.articles?.length ?? 0,
-
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           childAspectRatio: 3.6 / 5,
