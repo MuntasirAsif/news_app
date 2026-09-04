@@ -4,6 +4,8 @@ import 'package:news_app/src/home/controller/source_controller.dart';
 import '../controller/top_news_controller.dart';
 import 'widget/top_news_card.dart';
 
+part 'part/top_news_part.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -14,6 +16,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   TopNewsController topNewsController = TopNewsController();
   SourceController sourceController = SourceController();
+  Map<String, String> params = {'country': 'us'};
+  String? selectedSource;
   @override
   void initState() {
     getData();
@@ -21,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void getData() async {
-    await topNewsController.getTopNews();
+    await topNewsController.getTopNews(params);
     setState(() {});
     await sourceController.getSource();
     setState(() {});
@@ -60,43 +64,43 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemCount: sourceController.sourceModel?.sources?.length ?? 0,
                 itemBuilder: (context, index) {
                   final source = sourceController.sourceModel?.sources?[index];
-                  return Container(
-                    margin: EdgeInsets.only(right: 10),
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: AppColors.textSecondary.withValues(alpha: 0.5),
-                      borderRadius: BorderRadius.circular(10),
+                  return GestureDetector(
+                    onTap: () {
+                      selectedSource = source?.id;
+                      params = {'sources': source?.id ?? ""};
+                      getData();
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(right: 10),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: selectedSource == source?.id
+                            ? AppColors.primary
+                            : AppColors.textSecondary.withValues(alpha: 0.5),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(
+                        child: Text(
+                          source?.name ?? "",
+                          style: TextStyle(
+                            color: selectedSource == source?.id
+                                ? AppColors.surface
+                                : AppColors.textPrimary,
+                          ),
+                        ),
+                      ),
                     ),
-                    child: Center(child: Text(source?.name ?? "")),
                   );
                 },
               ),
             ),
 
-            SizedBox(height: 10),
-            Text("Top News", style: textTheme.titleMedium),
-            SizedBox(height: 10),
-
-            Expanded(
-              child: SizedBox(
-                child: topNewsController.isLoading
-                    ? Center(child: CircularProgressIndicator())
-                    : GridView.builder(
-                        itemCount:
-                            topNewsController.topNews?.articles?.length ?? 0,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 3.6 / 5,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                        ),
-                        itemBuilder: (context, index) {
-                          final news =
-                              topNewsController.topNews!.articles![index];
-                          return TopNewsCard(news: news, textTheme: textTheme);
-                        },
-                      ),
-              ),
+            TopNewsPart(
+              textTheme: textTheme,
+              topNewsController: topNewsController,
             ),
           ],
         ),

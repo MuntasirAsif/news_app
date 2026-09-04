@@ -10,13 +10,13 @@ class TopNewsController {
   bool isLoading = false;
   String? error;
 
-  Future getTopNews() async {
+  Future getTopNews(Map<String, String>? params) async {
     isLoading = true;
     try {
       log("APi calling");
       final response = await NetworkService().getData(
         ApiEndpoints.topHeadlines,
-        params: {'country': 'us'},
+        params: params,
       );
       topNews = TopNews.fromJson(response);
       isLoading = false;
